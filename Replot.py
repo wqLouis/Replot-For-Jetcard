@@ -15,7 +15,7 @@ def click_event_racer(event , x , y , flags , param):
         filelist[pos] = new_name
         print("New name : "+new_name)
 def click_event_bot(event , x , y , flags , param):
-    if event == cv2.EVENT_LBUTTONDBLCLK:
+    if event == cv2.EVENT_LBUTTONDOWN:
         name = filelist[pos]
         posx , posy = [] , []
         for i in str(x):
