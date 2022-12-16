@@ -3,7 +3,7 @@ def find_jpg(file_path):
     tem_list = []
     file_path = file_path.replace("\\" , "/")
     os.chdir(file_path)
-    tem_list = glob.glob("*jpg")
+    tem_list = glob.glob("*.jpg")
     return tem_list
 def draw_img(img , x ,y):
     img = cv2.circle(img , (x ,y) , 8 , (0,255,0) , 3)
@@ -86,3 +86,18 @@ def edit_name(img_name,x,y,xy_len,start_x,start_y):
         tem_list[(start_y)+i]=y[i]
     tem_str="".join(tem_list)
     return tem_str
+def draw_line(NumLine , img):
+    height , width = img.shape[0] , img.shape[1]
+    NewLine = width/NumLine
+    for i in range(NumLine):
+        img = cv2.line(img , (int(NewLine*i) , height) , (int(NewLine*i) , 0) , (0,0,0) , 2)
+    return img
+def progress_bar(current, total, bar_length=20):
+    fraction = current / total
+
+    arrow = int(fraction * bar_length - 1) * '-' + '>'
+    padding = int(bar_length - len(arrow)) * ' '
+
+    ending = '\n' if current == total else '\r'
+
+    print(f'Progress: [{arrow}{padding}] {int(fraction*100)}%', end=ending)
