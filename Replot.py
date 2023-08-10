@@ -108,7 +108,6 @@ def main():
     if ans == "jb":
         return "jb"
 i = 0
-key = 0
 mode = main()
 if __name__ =="__main__" :
     if mode == "jb":
@@ -123,7 +122,7 @@ if __name__ =="__main__" :
         while True:
             plot_racer()
             i += 1
-            if i >= len(filelist) or key == ord("q"):
+            if i >= len(filelist):
                 print("Finished !")
                 break
             else:
