@@ -52,6 +52,15 @@ def plot_jetbot():
     cv2.imshow("Img -JetBot" , img)
     cv2.setMouseCallback("Img -JetBot" , click_event_bot)
     cv2.waitKey(0)
+    if key == ord("q"):
+        print("Are you sure to leave this program? [y/n]")
+        key = cv2.waitKey(0)
+        if key == ord("y"):
+            print("Exit program")
+            exit()
+        elif key == ord("n"):
+            del(key)
+            print("Exit program canceled")
 def plot_racer():
     name = filelist[i]
     global pos
@@ -64,7 +73,17 @@ def plot_racer():
     draw_img(img , int(current_x) ,int(current_y))
     cv2.imshow("Img -JetRacer" , img)
     cv2.setMouseCallback("Img -JetRacer" , click_event_racer)
-    cv2.waitKey(0)
+    key = cv2.waitKey(0)
+    if key == ord("q"):
+        print("Are you sure to leave this program? [y/n]")
+        key = cv2.waitKey(0)
+        if key == ord("y"):
+            print("Exit program")
+            exit()
+        elif key == ord("n"):
+            del(key)
+            print("Exit program canceled")
+
 def main():
     global path
     path = ask("Path :")
@@ -89,6 +108,7 @@ def main():
     if ans == "jb":
         return "jb"
 i = 0
+key = 0
 mode = main()
 if __name__ =="__main__" :
     if mode == "jb":
@@ -103,7 +123,7 @@ if __name__ =="__main__" :
         while True:
             plot_racer()
             i += 1
-            if i >= len(filelist):
+            if i >= len(filelist) or key == ord("q"):
                 print("Finished !")
                 break
             else:
