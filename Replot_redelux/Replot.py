@@ -4,7 +4,7 @@
 
 #Strange mechanisms Warning
 
-import glob , os , cv2
+import glob , os , cv2 , tqdm
 
 def terminalMode():
 
@@ -62,6 +62,9 @@ def terminalMode():
         elif mode == "quit":
 
             quit()
+        
+        else:
+            print("Unknown command - type help for help")
 
 def jbORjr(name):
     if name[0] == "x":
@@ -75,18 +78,41 @@ def pltMode():
 
     path = str(input())
 
-    try:
-        os.chdir(path)
-    except BaseException:
-        pass
+    if not(os.getcwd() == path):
+        try:
+            os.chdir(path)
+        except BaseException:
+            print("Error when changing directory - Maybe try again?")
 
     imgs_arr = glob.glob("*.jpg")
 
+    if len(imgs_arr) == 0:
+        
+        print("Empty Directory :-(")
+        return
+
     if jbORjr(imgs_arr[0]) == "jb":
-        pass
+
+        for i in tqdm(range(len(imgs_arr))):
+            
+            imgs_arr[i] = pltjb("both" , imgs_arr[i])
+
     else:
         pass
     
     pass
+
+def pltjb(xORyOrBoth , name):
+
+    #find xy
+    x , y = "" , ""
+
+    x += name[3] + name[4] + name[5]
+    y += name[7] + name[8] + name[9]
+
+    x = int(x)
+    y = int(y)
+
+    cv2.imread()
 
 terminalMode()
