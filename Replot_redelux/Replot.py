@@ -93,9 +93,21 @@ def pltMode():
 
     if jbORjr(imgs_arr[0]) == "jb":
 
-        for i in tqdm(range(len(imgs_arr))):
+        for i in tqdm.tqdm(range(len(imgs_arr))):
             
-            imgs_arr[i] = pltjb("both" , imgs_arr[i])
+            Out = pltjb("both" , imgs_arr[i])
+
+            if Out == -2:
+                
+                i -= 1
+            
+            else:
+                
+                os.rename(imgs_arr[i] , Out)
+                imgs_arr[i] = Out
+            
+        
+        cv2.destroyAllWindows()
 
     else:
         pass
@@ -103,6 +115,10 @@ def pltMode():
     pass
 
 def pltjb(xORyOrBoth , name):
+ 
+    global mouseX , mouseY , stat , ori_img , img
+
+    stat = -3
 
     #find xy
     x , y = "" , ""
@@ -113,6 +129,56 @@ def pltjb(xORyOrBoth , name):
     x = int(x)
     y = int(y)
 
-    cv2.imread()
+    def click_event(event , x , y , flags ,param):
+
+        global mouseX , mouseY , stat
+
+        if event == cv2.EVENT_LBUTTONDOWN:
+
+            mouseX = x
+            mouseY = y
+            stat = -1
+            
+            cv2.imshow("Replot" , cv2.circle(cv2.imread(name) , (x ,y) , 8 , (0,255,0) , 3))
+
+        elif event == cv2.EVENT_RBUTTONDOWN:
+
+            stat = -2
+
+    ori_img = cv2.imread(name)
+    img = cv2.circle(ori_img , (x ,y) , 8 , (0,255,0) , 3)
+    cv2.imshow("Replot" , img)
+
+    cv2.setMouseCallback("Replot" , click_event)
+    key = cv2.waitKey(0)
+    
+    if stat == -1:
+        
+        newXY = [("%03d" %mouseX) , ("%03d" %mouseY)]
+
+        nameList = []
+
+        for i in name:
+            nameList.append(i)
+        
+        if xORyOrBoth == "x" or xORyOrBoth == "both":
+
+            nameList[3] , nameList[4] , nameList[5] = newXY[0][0] , newXY[0][1] , newXY[0][2]
+
+        if xORyOrBoth == "y" or xORyOrBoth == "both":
+
+            nameList[7] , nameList[8] , nameList[9] = newXY[1][0] , newXY[1][1] , newXY[1][2]
+
+        name = "".join(nameList)
+
+        return name
+
+    if stat == -2:
+
+        return -2
+
+    if stat == -3:
+        
+        return name
 
 terminalMode()
