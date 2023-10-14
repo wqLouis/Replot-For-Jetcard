@@ -49,15 +49,15 @@ def terminalMode():
         
         elif mode == "plt":
 
-            pltMode()
+            pltMode("both")
         
         elif mode == "pltx":
 
-            pass
+            pltMode("x")
 
         elif mode == "plty":
 
-            pass
+            pltMode("y")
 
         elif mode == "quit":
 
@@ -72,7 +72,7 @@ def jbORjr(name):
     else:
         return "jr"
     
-def pltMode():
+def pltMode(xymode):
     
     print("File path?")
 
@@ -95,7 +95,7 @@ def pltMode():
 
         for i in tqdm.tqdm(range(len(imgs_arr))):
             
-            Out = pltjb("both" , imgs_arr[i])
+            Out = pltjb(xymode , imgs_arr[i])
 
             if Out == -2:
                 
@@ -116,7 +116,7 @@ def pltMode():
 
 def pltjb(xORyOrBoth , name):
  
-    global mouseX , mouseY , stat , ori_img , img
+    global mouseX , mouseY , stat , ori_img , img , oriXY
 
     stat = -3
 
@@ -129,17 +129,27 @@ def pltjb(xORyOrBoth , name):
     x = int(x)
     y = int(y)
 
+    oriXY = [x , y]
+
     def click_event(event , x , y , flags ,param):
 
-        global mouseX , mouseY , stat
+        global mouseX , mouseY , stat , oriXY
 
         if event == cv2.EVENT_LBUTTONDOWN:
 
-            mouseX = x
-            mouseY = y
+            if xORyOrBoth == "x" or xORyOrBoth == "both":
+                mouseX = x
+            else:
+                mouseX = oriXY[0]
+
+            if xORyOrBoth == "y" or xORyOrBoth == "both":
+                mouseY = y
+            else:
+                mouseY = oriXY[1]
+
             stat = -1
             
-            cv2.imshow("Replot" , cv2.circle(cv2.imread(name) , (x ,y) , 8 , (0,255,0) , 3))
+            cv2.imshow("Replot" , cv2.circle(cv2.imread(name) , (mouseX ,mouseY) , 8 , (0,255,0) , 3))
 
         elif event == cv2.EVENT_RBUTTONDOWN:
 
