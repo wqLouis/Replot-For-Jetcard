@@ -123,7 +123,7 @@ def pltMode(xymode):
             
             os.rename(imgs_arr[i] , Out)
             imgs_arr[i] = Out
-            
+
         cv2.destroyAllWindows()
     
     pass
@@ -217,6 +217,7 @@ def pltjr(xORyOrBoth , name):
 
     x , y = int(x) , int(y)
     mouseX , mouseY = x , y
+    oriXY = [x , y]
 
     img = cv2.circle(ori_img.copy() , (x ,y) , 8 , (0,255,0) , 3)
     img = cv2.line(img , (0 , 112) , (224 , 112) , (0,0,0) , 1)
@@ -225,19 +226,15 @@ def pltjr(xORyOrBoth , name):
     
     def click_event(event , x , y , flags ,param):
 
-        global mouseX , mouseY , oriXY
+        global mouseX , mouseY
 
         if event == cv2.EVENT_LBUTTONDOWN:
 
             if xORyOrBoth == "x" or xORyOrBoth == "both":
                 mouseX = x
-            else:
-                mouseX = oriXY[0]
 
             if xORyOrBoth == "y" or xORyOrBoth == "both":
                 mouseY = y
-            else:
-                mouseY = oriXY[1]
             
             clied_img = cv2.circle(ori_img.copy() , (x ,y) , 8 , (0,255,0) , 3)
             clied_img = cv2.line(clied_img , (0 , 112) , (224 , 112) , (0,0,0) , 1)
