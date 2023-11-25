@@ -236,7 +236,7 @@ def pltjr(xORyOrBoth , name):
             if xORyOrBoth == "y" or xORyOrBoth == "both":
                 mouseY = y
             
-            clied_img = cv2.circle(ori_img.copy() , (x ,y) , 8 , (0,255,0) , 3)
+            clied_img = cv2.circle(ori_img.copy() , (mouseX ,mouseY) , 8 , (0,255,0) , 3)
             clied_img = cv2.line(clied_img , (0 , 112) , (224 , 112) , (0,0,0) , 1)
             clied_img = cv2.line(clied_img , (0 , 179) , (224 , 179) , (0,0,0) , 1)
             clied_img = cv2.line(clied_img , (112 , 0) , (112 , 224) , (0,0,0) , 1)
