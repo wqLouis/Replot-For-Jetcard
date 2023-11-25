@@ -4,7 +4,14 @@
 
 #Strange mechanisms Warning
 
-import glob , os , cv2 , tqdm
+try:
+    import cv2
+except BaseException:
+    print("Cannot import library CV2 check if it is installed \n Press any key to quit")
+    input()
+    quit()
+
+import glob , os , cv2
 
 def terminalMode():
 
@@ -93,32 +100,39 @@ def pltMode(xymode):
 
     if jbORjr(imgs_arr[0]) == "jb":
 
-        for i in tqdm.tqdm(range(len(imgs_arr))):
+        for i in range(len(imgs_arr)):
             
             Out = pltjb(xymode , imgs_arr[i])
+                
+            if Out == 0:
+                break
 
-            if Out == -2:
-                
-                i -= 1
-            
-            else:
-                
-                os.rename(imgs_arr[i] , Out)
-                imgs_arr[i] = Out
-            
+            os.rename(imgs_arr[i] , Out)
+            imgs_arr[i] = Out
         
         cv2.destroyAllWindows()
 
     else:
-        pass
+        
+        for i in range(len(imgs_arr)):
+
+            Out = pltjr(xymode , imgs_arr[i])
+
+            if Out == 0:
+                break
+            
+            os.rename(imgs_arr[i] , Out)
+            imgs_arr[i] = Out
+            
+        cv2.destroyAllWindows()
     
     pass
 
 def pltjb(xORyOrBoth , name):
  
-    global mouseX , mouseY , stat , ori_img , img , oriXY
+    global mouseX , mouseY , ori_img , img , oriXY
 
-    stat = -3
+    mouseX , mouseY = 0 , 0
 
     #find xy
     x , y = "" , ""
@@ -133,7 +147,7 @@ def pltjb(xORyOrBoth , name):
 
     def click_event(event , x , y , flags ,param):
 
-        global mouseX , mouseY , stat , oriXY
+        global mouseX , mouseY , oriXY
 
         if event == cv2.EVENT_LBUTTONDOWN:
 
@@ -146,14 +160,8 @@ def pltjb(xORyOrBoth , name):
                 mouseY = y
             else:
                 mouseY = oriXY[1]
-
-            stat = -1
             
             cv2.imshow("Replot" , cv2.circle(cv2.imread(name) , (mouseX ,mouseY) , 8 , (0,255,0) , 3))
-
-        elif event == cv2.EVENT_RBUTTONDOWN:
-
-            stat = -2
 
     ori_img = cv2.imread(name)
     img = cv2.circle(ori_img , (x ,y) , 8 , (0,255,0) , 3)
@@ -161,34 +169,112 @@ def pltjb(xORyOrBoth , name):
 
     cv2.setMouseCallback("Replot" , click_event)
     key = cv2.waitKey(0)
+
+    if key == ord("q"):
+        return 0
+        
+    newXY = [("%03d" %mouseX) , ("%03d" %mouseY)]
+
+    nameList = []
+
+    for i in name:
+        nameList.append(i)
     
-    if stat == -1:
+    if xORyOrBoth == "x" or xORyOrBoth == "both":
+        nameList[3] , nameList[4] , nameList[5] = newXY[0][0] , newXY[0][1] , newXY[0][2]
+    if xORyOrBoth == "y" or xORyOrBoth == "both":
+        nameList[7] , nameList[8] , nameList[9] = newXY[1][0] , newXY[1][1] , newXY[1][2]
+
+    name = "".join(nameList)
+
+    return name
+
+def pltjr(xORyOrBoth , name):
+
+    global mouseX , mouseY
+    
+    num_1 , num_2 , number_ = 0 , 1 , 0
+
+    ori_img = cv2.imread(name)
+    img = ori_img.copy()
+
+    for i in name:
+        if i == "_":
+            number_ += 1
+            if number_ == 2:
+                break
+        if i != "_":
+            if number_ == 0:
+                num_1 += 1
+            num_2 += 1
         
-        newXY = [("%03d" %mouseX) , ("%03d" %mouseY)]
+    x , y = "" , ""
 
-        nameList = []
+    for i in range(num_1):
+        x += name[i]
+    for i in range(num_1 + 1 , num_2):
+        y += name[i]
 
-        for i in name:
-            nameList.append(i)
-        
-        if xORyOrBoth == "x" or xORyOrBoth == "both":
+    x , y = int(x) , int(y)
+    mouseX , mouseY = x , y
 
-            nameList[3] , nameList[4] , nameList[5] = newXY[0][0] , newXY[0][1] , newXY[0][2]
+    img = cv2.circle(ori_img.copy() , (x ,y) , 8 , (0,255,0) , 3)
+    img = cv2.line(img , (0 , 112) , (224 , 112) , (0,0,0) , 1)
+    img = cv2.line(img , (0 , 179) , (224 , 179) , (0,0,0) , 1)
+    img = cv2.line(img , (112 , 0) , (112 , 224) , (0,0,0) , 1)
+    
+    def click_event(event , x , y , flags ,param):
 
-        if xORyOrBoth == "y" or xORyOrBoth == "both":
+        global mouseX , mouseY , oriXY
 
-            nameList[7] , nameList[8] , nameList[9] = newXY[1][0] , newXY[1][1] , newXY[1][2]
+        if event == cv2.EVENT_LBUTTONDOWN:
 
-        name = "".join(nameList)
+            if xORyOrBoth == "x" or xORyOrBoth == "both":
+                mouseX = x
+            else:
+                mouseX = oriXY[0]
 
-        return name
+            if xORyOrBoth == "y" or xORyOrBoth == "both":
+                mouseY = y
+            else:
+                mouseY = oriXY[1]
+            
+            clied_img = cv2.circle(ori_img.copy() , (x ,y) , 8 , (0,255,0) , 3)
+            clied_img = cv2.line(clied_img , (0 , 112) , (224 , 112) , (0,0,0) , 1)
+            clied_img = cv2.line(clied_img , (0 , 179) , (224 , 179) , (0,0,0) , 1)
+            clied_img = cv2.line(clied_img , (112 , 0) , (112 , 224) , (0,0,0) , 1)
 
-    if stat == -2:
+            cv2.imshow("Replot" , clied_img)
 
-        return -2
+    cv2.imshow("Replot" , img)
+    cv2.setMouseCallback("Replot" , click_event)
 
-    if stat == -3:
-        
-        return name
+    key = cv2.waitKey(0)
+
+    if key == ord("q"):
+        return 0
+
+    newXY = [mouseX , mouseY]
+    nameList = []
+
+    for i in name:
+        nameList.append(i)
+
+    for i in range(num_1):
+        nameList.pop(0)
+
+    for i in range(num_2-num_1-1):
+        nameList.pop(1)
+    
+    if xORyOrBoth == "y" or xORyOrBoth == "both":
+        for i in range(len(str(newXY[1]))):
+            nameList.insert(1+i , str(newXY[1])[i])
+    if xORyOrBoth == "x" or xORyOrBoth == "both":
+        for i in range(len(str(newXY[0]))):
+            nameList.insert(i , str(newXY[0])[i])
+
+    name = "".join(nameList)
+    
+    return name
 
 terminalMode()
