@@ -51,7 +51,6 @@ def terminalMode():
             print("plt     - Normal plot mode")
             print("pltx    - Only plot X value in image")
             print("plty    - Only plot Y value in image")
-            print("plotcpt - Use PlotChiPT AI model to plot image (Only for JetBot) --- WIP")
             print("quit    - Quit program")
         
         elif mode == "plt":
