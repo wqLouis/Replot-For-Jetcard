@@ -92,6 +92,8 @@ def pltMode(xymode):
 
     imgs_arr = glob.glob("*.jpg")
 
+    num_img = 0
+
     if len(imgs_arr) == 0:
         
         print("Empty Directory :-(")
@@ -108,7 +110,10 @@ def pltMode(xymode):
 
             os.rename(imgs_arr[i] , Out)
             imgs_arr[i] = Out
-        
+            num_img += 1
+
+            print("\r %i/%i done" % (num_img , len(imgs_arr)) , end='')
+
         cv2.destroyAllWindows()
 
     else:
@@ -122,6 +127,9 @@ def pltMode(xymode):
             
             os.rename(imgs_arr[i] , Out)
             imgs_arr[i] = Out
+            num_img += 1
+
+            print("\r %i/%i done" % (num_img , len(imgs_arr)) , end='')
 
         cv2.destroyAllWindows()
     
