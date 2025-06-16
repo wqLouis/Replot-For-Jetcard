@@ -1,1 +1,1 @@
-This repo is abandoned as not longer be maintained
+This repo is abandoned and not longer be maintained
